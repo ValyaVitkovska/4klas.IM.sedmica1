@@ -4,8 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Интерактивна математика · 4. клас</title>
-
-<!-- Мета тагове за преглед на линка (Facebook, Messenger, WhatsApp, Slack, Twitter/X и др.) -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Интерактивна математика · 4. клас · Седмица 1" />
 <meta property="og:description" content="Интерактивни задачи по математика за 4. клас — събиране, изваждане, умножение, деление, текстови и логически задачи, с жокери за помощ." />
@@ -15,7 +13,6 @@
 <meta name="twitter:title" content="Интерактивна математика · 4. клас · Седмица 1" />
 <meta name="twitter:description" content="Интерактивни задачи по математика за 4. клас с жокери за помощ." />
 <meta name="twitter:image" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/social-preview.jpg" />
-
 <style>
 :root {
   --blue-50: #eff6ff;
@@ -539,44 +536,121 @@ html, body {
 .joker-box.yellow .joker-title { color: var(--yellow-700); }
 .joker-box.blue .joker-title { color: var(--blue-800); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
 
-/* Логически жокер: илюстрация + помощник */
-.logic-joker {
+/* Логически жокер: рисунка на задачата + помощник с действие */
+.logic-joker-box { display: block; width: 100%; }
+.logic-joker-section { margin-bottom: 18px; }
+.logic-joker-section:last-child { margin-bottom: 0; }
+
+.logic-joker-visual {
+  background: #fff;
+  border: 1px dashed var(--yellow-400);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 6px;
+}
+.logic-vis-note {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-600);
+  margin-bottom: 10px;
+}
+.logic-vis-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.logic-vis-person {
+  flex: 1;
+  min-width: 150px;
+}
+.logic-vis-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+  margin-bottom: 6px;
+}
+.logic-vis-question {
+  position: relative;
+  opacity: 0.55;
+}
+.logic-vis-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.logic-vis-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+.logic-vis-group span {
+  font-weight: 800;
+  color: #7c3aed;
+  font-size: 18px;
+}
+
+/* Числови редици / стъпкови схеми */
+.logic-seq {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
-}
-.logic-joker-icon {
-  width: 130px;
-  flex-shrink: 0;
-}
-.logic-joker-icon svg { width: 100%; height: auto; display: block; }
-.logic-joker-helper { flex: 1; min-width: 200px; }
-.logic-joker-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--yellow-700);
-  margin-bottom: 8px;
-}
-.logic-joker-fields {
-  display: flex;
-  flex-wrap: wrap;
   gap: 8px;
 }
-.logic-scratch-input {
-  width: 52px;
-  height: 48px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  border: 2px solid var(--slate-300);
-  border-radius: 8px;
-  outline: none;
-  font-family: 'Courier New', monospace;
-  color: var(--slate-800);
+.logic-seq-box {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #fff;
+  border: 2px solid var(--blue-300);
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--blue-800);
 }
-.logic-scratch-input:focus { border-color: var(--blue-500); }
+.logic-seq-box.missing {
+  border-style: dashed;
+  border-color: var(--yellow-400);
+  color: var(--yellow-600);
+  background: var(--yellow-50);
+}
+.logic-seq-arrow {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-500);
+}
+.logic-seq-eq {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--slate-700);
+}
+
+/* Помощник — извършване на действието с колонни жокери */
+.logic-helper-pre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-600);
+  margin: 6px 0 10px;
+}
+.logic-joker-helper-calc {
+  margin-top: 6px;
+}
+/* Вложеният жокер в помощника без двойна рамка/фон */
+.logic-joker-helper-calc .joker-box {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.logic-joker-helper-calc .joker-box .joker-title {
+  display: none;
+}
 
 /* Vertical add/sub joker */
 .vjoker {
@@ -916,8 +990,6 @@ window.HERO_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoH
 
 <div class="app-wrap">
   <div class="container">
-
-    <!-- Заглавие -->
     <div class="header-card">
       <div class="header-left">
         <img id="headerLogo" alt="Лого" class="header-logo" />
@@ -928,8 +1000,6 @@ window.HERO_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoH
       </div>
       <button type="button" id="refreshBtn" class="btn-refresh"></button>
     </div>
-
-    <!-- Навигация -->
     <div class="tabs">
       <button type="button" class="tab-btn active" data-tab="home">🏠 Начало</button>
       <button type="button" class="tab-btn" data-tab="r1">1. Събиране и изваждане</button>
@@ -937,15 +1007,10 @@ window.HERO_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoH
       <button type="button" class="tab-btn" data-tab="r3">3. Текстови задачи</button>
       <button type="button" class="tab-btn" data-tab="r4">4. Логически задачи</button>
     </div>
-
-    <!-- Съдържание -->
     <div id="content"></div>
-
   </div>
 </div>
-
 <img id="cornerLogo" alt="Валя Витковска" class="corner-logo" />
-
 <script>
 // ==================== Утилити ====================
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -972,56 +1037,107 @@ const ICONS = {
 };
 
 // SVG илюстрации за жокера в рубрика "Логически задачи"
-const LOGIC_ICONS = {
-  sequence: `<svg viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
-    <rect x="4" y="30" width="26" height="26" rx="6" fill="#93c5fd" />
-    <rect x="38" y="22" width="26" height="34" rx="6" fill="#60a5fa" />
-    <rect x="72" y="14" width="26" height="42" rx="6" fill="#3b82f6" />
-    <rect x="106" y="6" width="26" height="50" rx="6" fill="#facc15" stroke="#ca8a04" stroke-width="2" stroke-dasharray="4 3" />
-    <text x="119" y="36" font-size="20" font-weight="700" fill="#a16207" text-anchor="middle">?</text>
-    <text x="17" y="47" font-size="13" font-weight="700" fill="#1e3a8a" text-anchor="middle">1</text>
-    <text x="51" y="43" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
-    <text x="85" y="39" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
-  </svg>`,
-  think: `<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="38" r="30" fill="#fef9c3" stroke="#eab308" stroke-width="3" />
-    <text x="60" y="47" font-size="30" font-weight="800" fill="#a16207" text-anchor="middle">?</text>
-    <circle cx="30" cy="72" r="5" fill="#fde68a" />
-    <circle cx="20" cy="84" r="3.2" fill="#fde68a" />
-  </svg>`,
-  compare: `<svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
-    <line x1="80" y1="14" x2="80" y2="30" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-    <line x1="24" y1="30" x2="136" y2="30" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-    <line x1="24" y1="30" x2="16" y2="58" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-    <line x1="136" y1="30" x2="144" y2="58" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-    <rect x="0" y="58" width="32" height="8" rx="4" fill="#3b82f6" />
-    <rect x="128" y="58" width="32" height="8" rx="4" fill="#db2777" />
-    <circle cx="80" cy="10" r="6" fill="#334155" />
-  </svg>`,
-  consecutive: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="14" width="52" height="52" rx="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="3" />
-    <circle cx="26" cy="30" r="4" fill="#166534" /><circle cx="46" cy="30" r="4" fill="#166534" />
-    <circle cx="26" cy="50" r="4" fill="#166534" /><circle cx="46" cy="50" r="4" fill="#166534" />
-    <rect x="78" y="14" width="52" height="52" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="3" stroke-dasharray="5 4" />
-    <text x="104" y="47" font-size="22" font-weight="800" fill="#166534" text-anchor="middle">+1</text>
-  </svg>`,
-  multiply: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
-    <g fill="#a855f7">
-      <circle cx="16" cy="14" r="6" /><circle cx="36" cy="14" r="6" /><circle cx="56" cy="14" r="6" />
-      <circle cx="16" cy="34" r="6" /><circle cx="36" cy="34" r="6" /><circle cx="56" cy="34" r="6" />
-      <circle cx="16" cy="54" r="6" /><circle cx="36" cy="54" r="6" /><circle cx="56" cy="54" r="6" />
-    </g>
-    <text x="100" y="42" font-size="26" font-weight="800" fill="#7c3aed" text-anchor="middle">?</text>
-  </svg>`,
-  age: `<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
-    <rect x="30" y="40" width="60" height="34" rx="6" fill="#fca5a5" />
-    <rect x="30" y="54" width="60" height="8" fill="#fff5" />
-    <rect x="46" y="24" width="10" height="20" fill="#fbbf24" />
-    <rect x="64" y="24" width="10" height="20" fill="#60a5fa" />
-    <path d="M46 24 q5 -12 0 -16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round" />
-    <path d="M69 24 q5 -12 0 -16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round" />
-  </svg>`
+// Малки рисунки на предмети за визуалния жокер
+const ITEM_SHAPES = {
+  'топчета': (cx, cy) => `<circle cx="${cx}" cy="${cy}" r="7" fill="#3b82f6" stroke="#1e40af" stroke-width="1.5" />`,
+  'стикери': (cx, cy) => `<rect x="${cx - 7}" y="${cy - 7}" width="14" height="14" rx="3" fill="#f472b6" stroke="#be185d" stroke-width="1.5" />`,
+  'моливи': (cx, cy) => `<g><rect x="${cx - 3}" y="${cy - 8}" width="6" height="13" fill="#facc15" stroke="#a16207" stroke-width="1" /><polygon points="${cx - 3},${cy + 5} ${cx + 3},${cy + 5} ${cx},${cy + 9}" fill="#78350f" /></g>`,
+  'копчета': (cx, cy) => `<g><circle cx="${cx}" cy="${cy}" r="7" fill="#22c55e" stroke="#15803d" stroke-width="1.5" /><circle cx="${cx - 2}" cy="${cy - 2}" r="1" fill="#15803d" /><circle cx="${cx + 2}" cy="${cy - 2}" r="1" fill="#15803d" /><circle cx="${cx - 2}" cy="${cy + 2}" r="1" fill="#15803d" /><circle cx="${cx + 2}" cy="${cy + 2}" r="1" fill="#15803d" /></g>`,
+  'мидички': (cx, cy) => `<g><path d="M${cx} ${cy + 6} L${cx - 7} ${cy - 4} Q${cx} ${cy - 9} ${cx + 7} ${cy - 4} Z" fill="#fb923c" stroke="#c2410c" stroke-width="1.2" /><line x1="${cx}" y1="${cy + 5}" x2="${cx}" y2="${cy - 6}" stroke="#c2410c" stroke-width="1" /><line x1="${cx}" y1="${cy + 4}" x2="${cx - 4}" y2="${cy - 5}" stroke="#c2410c" stroke-width="0.8" /><line x1="${cx}" y1="${cy + 4}" x2="${cx + 4}" y2="${cy - 5}" stroke="#c2410c" stroke-width="0.8" /></g>`
 };
+
+function drawItemsGrid(item, count, opts = {}) {
+  const shape = ITEM_SHAPES[item] || ITEM_SHAPES['топчета'];
+  const perRow = opts.perRow || 10;
+  const gap = 22;
+  const startX = 16;
+  const startY = 16;
+  const maxShow = Math.min(count, opts.max || 60);
+  let shapes = '';
+  for (let i = 0; i < maxShow; i++) {
+    const r = Math.floor(i / perRow);
+    const c = i % perRow;
+    shapes += shape(startX + c * gap, startY + r * gap);
+  }
+  const rows = Math.ceil(maxShow / perRow);
+  const w = startX + perRow * gap;
+  const h = startY + rows * gap;
+  const more = count > maxShow ? `<text x="${w / 2}" y="${h + 12}" font-size="11" fill="#64748b" text-anchor="middle">… общо ${count}</text>` : '';
+  return `<svg viewBox="0 0 ${w} ${h + (count > maxShow ? 18 : 4)}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">${shapes}${more}</svg>`;
+}
+
+// Визуален жокер според конкретната задача (рисува предметите с реалните числа)
+function logicJokerVisual(p) {
+  const m = p.meta || {};
+  if (p.subtype === 'compare') {
+    // Двама души със съответните количества
+    const bigger = drawItemsGrid(m.item, m.base, { perRow: 10, max: 60 });
+    return `
+      <div class="logic-vis-row">
+        <div class="logic-vis-person">
+          <div class="logic-vis-name">Той: ${m.base}</div>
+          ${bigger}
+        </div>
+        <div class="logic-vis-person">
+          <div class="logic-vis-name">Тя: с ${m.diff} по-малко</div>
+          <div class="logic-vis-question">${drawItemsGrid(m.item, Math.max(m.base - m.diff, 0), { perRow: 10, max: 60 })}</div>
+        </div>
+      </div>`;
+  }
+  if (p.subtype === 'multiply') {
+    // factor групи по other (рисуваме factor реда с ? за брой във всеки)
+    const shape = ITEM_SHAPES['топчета'];
+    let groups = '';
+    const gshapes = 3; // показваме символично 3 на група
+    for (let g = 0; g < m.factor; g++) {
+      let inner = '';
+      for (let k = 0; k < gshapes; k++) inner += shape(16 + k * 20, 16);
+      groups += `<div class="logic-vis-group"><svg viewBox="0 0 ${16 + gshapes * 20} 32" xmlns="http://www.w3.org/2000/svg" style="height:32px;">${inner}</svg><span>?</span></div>`;
+    }
+    return `
+      <div class="logic-vis-note">${m.factor} еднакви групи. Всичко: ${m.product}</div>
+      <div class="logic-vis-groups">${groups}</div>`;
+  }
+  if (p.subtype === 'sequence') {
+    const terms = m.terms || [];
+    let boxes = '';
+    terms.forEach((t, i) => {
+      const isMissing = i === m.missingIndex;
+      boxes += `<div class="logic-seq-box${isMissing ? ' missing' : ''}">${isMissing ? '?' : t}</div>`;
+      if (i < terms.length - 1) boxes += `<div class="logic-seq-arrow">+${m.step}</div>`;
+    });
+    return `<div class="logic-vis-note">Всяко следващо е с ${m.step} повече:</div><div class="logic-seq">${boxes}</div>`;
+  }
+  if (p.subtype === 'consecutive') {
+    return `
+      <div class="logic-vis-note">Две числа едно след друго (второто е с 1 по-голямо):</div>
+      <div class="logic-seq">
+        <div class="logic-seq-box missing">?</div>
+        <div class="logic-seq-arrow">+1</div>
+        <div class="logic-seq-box missing">?</div>
+        <div class="logic-seq-eq">= ${m.sum}</div>
+      </div>`;
+  }
+  if (p.subtype === 'think') {
+    return `
+      <div class="logic-vis-note">Търсеното число + ${m.added} = ${m.result}</div>
+      <div class="logic-seq">
+        <div class="logic-seq-box missing">?</div>
+        <div class="logic-seq-arrow">+${m.added}</div>
+        <div class="logic-seq-eq">= ${m.result}</div>
+      </div>`;
+  }
+  if (p.subtype === 'age') {
+    return `
+      <div class="logic-vis-note">Преди: ${m.ageThen} г. → изминали ${m.yearsAgo} г. → сега:</div>
+      <div class="logic-seq">
+        <div class="logic-seq-box">${m.ageThen}</div>
+        <div class="logic-seq-arrow">+${m.yearsAgo}</div>
+        <div class="logic-seq-box missing">?</div>
+      </div>`;
+  }
+  return '';
+}
 
 // ==================== Генериране на задачи ====================
 function generateProblems() {
@@ -1095,7 +1211,10 @@ function generateLogicProblems() {
       id: 'r4_1',
       type: 'logic',
       text: `Намери липсващото число в редицата: ${display}`,
-      ans
+      ans,
+      meta: { terms, missingIndex, step },
+      helperOp: '+', helperN1: terms[missingIndex - 1], helperN2: step,
+      helperExpr: `${terms[missingIndex - 1]} + ${step} = `
     });
   }
 
@@ -1108,7 +1227,10 @@ function generateLogicProblems() {
       id: 'r4_2',
       type: 'logic',
       text: `Мисля си число. Като прибавя ${added}, получавам ${result}. Кое е числото, за което мисля?`,
-      ans: result - added
+      ans: result - added,
+      meta: { added, result },
+      helperOp: '-', helperN1: result, helperN2: added,
+      helperExpr: `${result} − ${added} = `
     });
   }
 
@@ -1124,7 +1246,10 @@ function generateLogicProblems() {
       id: 'r4_3',
       type: 'logic',
       text: `${n1} има ${base} ${item}. Той има с ${diff} ${item} повече от ${n2}. Колко ${item} има ${n2}?`,
-      ans: base - diff
+      ans: base - diff,
+      meta: { item, base, diff },
+      helperOp: '-', helperN1: base, helperN2: diff,
+      helperExpr: `${base} − ${diff} = `
     });
   }
 
@@ -1137,7 +1262,11 @@ function generateLogicProblems() {
       id: 'r4_4',
       type: 'logic',
       text: `Сборът от две последователни числа е ${sum}. Кое е по-малкото от тях?`,
-      ans: n
+      ans: n,
+      meta: { sum },
+      helperOp: '/', helperN1: sum - 1, helperN2: 2,
+      helperPre: `Първо: ${sum} − 1 = ${sum - 1}. После раздели на 2:`,
+      helperExpr: `(${sum} − 1) : 2 = `
     });
   }
 
@@ -1151,7 +1280,10 @@ function generateLogicProblems() {
       id: 'r4_5',
       type: 'logic',
       text: `Кое число, умножено по ${factor}, дава ${product}?`,
-      ans: other
+      ans: other,
+      meta: { factor, other, product },
+      helperOp: '/', helperN1: product, helperN2: factor,
+      helperExpr: `${product} : ${factor} = `
     });
   }
 
@@ -1160,12 +1292,16 @@ function generateLogicProblems() {
     const yearsAgo = rand(2, 6);
     const ageThen = rand(6, 12);
     const name = pick([...boyNames, ...girlNames]);
+    const isGirl = girlNames.includes(name);
     problems.push({
       subtype: 'age',
       id: 'r4_6',
       type: 'logic',
-      text: `Преди ${yearsAgo} години ${name} е бил${girlNames.includes(name) ? 'а' : ''} на ${ageThen} години. На колко години е ${girlNames.includes(name) ? 'тя' : 'той'} сега?`,
-      ans: ageThen + yearsAgo
+      text: `Преди ${yearsAgo} години ${name} е бил${isGirl ? 'а' : ''} на ${ageThen} години. На колко години е ${isGirl ? 'тя' : 'той'} сега?`,
+      ans: ageThen + yearsAgo,
+      meta: { ageThen, yearsAgo },
+      helperOp: '+', helperN1: ageThen, helperN2: yearsAgo,
+      helperExpr: `${ageThen} + ${yearsAgo} = `
     });
   }
 
@@ -1293,20 +1429,32 @@ function jokerPanelHTML(p) {
 }
 
 function logicJokerPanelHTML(p) {
-  const icon = LOGIC_ICONS[p.subtype] || LOGIC_ICONS.think;
-  let scratchFields = '';
-  for (let i = 0; i < 4; i++) {
-    scratchFields += `<input type="text" class="logic-scratch-input" />`;
+  const visual = logicJokerVisual(p);
+
+  // Помощникът ползва същите жокери като другите рубрики
+  let helperInner = '';
+  const op = p.helperOp;
+  const n1 = p.helperN1;
+  const n2 = p.helperN2;
+  if (op === '+' || op === '-') {
+    helperInner = verticalJokerHTML(p.id, n1, n2, op);
+  } else if (op === '*') {
+    helperInner = multiplicationJokerHTML(n1, n2);
+  } else if (op === '/') {
+    helperInner = divisionJokerHTML(n1, n2);
   }
+  const helperPre = p.helperPre ? `<div class="logic-helper-pre">${p.helperPre}</div>` : '';
+
   const inner = `
-    <div class="joker-box yellow">
-      <div class="joker-title">Помощник</div>
-      <div class="logic-joker">
-        <div class="logic-joker-icon">${icon}</div>
-        <div class="logic-joker-helper">
-          <div class="logic-joker-label">Полета за смятане:</div>
-          <div class="logic-joker-fields">${scratchFields}</div>
-        </div>
+    <div class="joker-box yellow logic-joker-box">
+      <div class="logic-joker-section">
+        <div class="joker-title">🖼️ Жокер — виж задачата нарисувана</div>
+        <div class="logic-joker-visual">${visual}</div>
+      </div>
+      <div class="logic-joker-section">
+        <div class="joker-title">🧮 Помощник — извърши действието</div>
+        ${helperPre}
+        <div class="logic-joker-helper-calc">${helperInner}</div>
       </div>
     </div>`;
   const hint = `<div class="joker-hint joker-hint-warn">⚠️ Ползването на жокер намалява резултата ти за тази задача.</div>`;
