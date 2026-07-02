@@ -510,6 +510,17 @@ html, body {
   font-weight: 500;
 }
 @media (min-width: 640px) { .joker-hint { font-size: 18px; } }
+.joker-hint-warn {
+  color: #9a3412;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-block;
+}
+@media (min-width: 640px) { .joker-hint-warn { font-size: 15px; } }
 
 .joker-box {
   display: inline-block;
@@ -527,6 +538,45 @@ html, body {
 }
 .joker-box.yellow .joker-title { color: var(--yellow-700); }
 .joker-box.blue .joker-title { color: var(--blue-800); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+
+/* Логически жокер: илюстрация + помощник */
+.logic-joker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+.logic-joker-icon {
+  width: 130px;
+  flex-shrink: 0;
+}
+.logic-joker-icon svg { width: 100%; height: auto; display: block; }
+.logic-joker-helper { flex: 1; min-width: 200px; }
+.logic-joker-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--yellow-700);
+  margin-bottom: 8px;
+}
+.logic-joker-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.logic-scratch-input {
+  width: 52px;
+  height: 48px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  border: 2px solid var(--slate-300);
+  border-radius: 8px;
+  outline: none;
+  font-family: 'Courier New', monospace;
+  color: var(--slate-800);
+  background: #fff;
+}
+.logic-scratch-input:focus { border-color: var(--blue-500); }
 
 /* Vertical add/sub joker */
 .vjoker {
@@ -730,6 +780,10 @@ html, body {
   border-color: var(--red-500);
   box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
 }
+.problem-card.card-assisted {
+  border-color: var(--yellow-400);
+  box-shadow: 0 0 0 3px rgba(234,179,8,0.18);
+}
 
 /* Модал със статистика */
 .stats-overlay {
@@ -917,6 +971,58 @@ const ICONS = {
   refresh: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>'
 };
 
+// SVG илюстрации за жокера в рубрика "Логически задачи"
+const LOGIC_ICONS = {
+  sequence: `<svg viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="30" width="26" height="26" rx="6" fill="#93c5fd" />
+    <rect x="38" y="22" width="26" height="34" rx="6" fill="#60a5fa" />
+    <rect x="72" y="14" width="26" height="42" rx="6" fill="#3b82f6" />
+    <rect x="106" y="6" width="26" height="50" rx="6" fill="#facc15" stroke="#ca8a04" stroke-width="2" stroke-dasharray="4 3" />
+    <text x="119" y="36" font-size="20" font-weight="700" fill="#a16207" text-anchor="middle">?</text>
+    <text x="17" y="47" font-size="13" font-weight="700" fill="#1e3a8a" text-anchor="middle">1</text>
+    <text x="51" y="43" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+    <text x="85" y="39" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  </svg>`,
+  think: `<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="38" r="30" fill="#fef9c3" stroke="#eab308" stroke-width="3" />
+    <text x="60" y="47" font-size="30" font-weight="800" fill="#a16207" text-anchor="middle">?</text>
+    <circle cx="30" cy="72" r="5" fill="#fde68a" />
+    <circle cx="20" cy="84" r="3.2" fill="#fde68a" />
+  </svg>`,
+  compare: `<svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg">
+    <line x1="80" y1="14" x2="80" y2="30" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+    <line x1="24" y1="30" x2="136" y2="30" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+    <line x1="24" y1="30" x2="16" y2="58" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+    <line x1="136" y1="30" x2="144" y2="58" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+    <rect x="0" y="58" width="32" height="8" rx="4" fill="#3b82f6" />
+    <rect x="128" y="58" width="32" height="8" rx="4" fill="#db2777" />
+    <circle cx="80" cy="10" r="6" fill="#334155" />
+  </svg>`,
+  consecutive: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="14" width="52" height="52" rx="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="3" />
+    <circle cx="26" cy="30" r="4" fill="#166534" /><circle cx="46" cy="30" r="4" fill="#166534" />
+    <circle cx="26" cy="50" r="4" fill="#166534" /><circle cx="46" cy="50" r="4" fill="#166534" />
+    <rect x="78" y="14" width="52" height="52" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="3" stroke-dasharray="5 4" />
+    <text x="104" y="47" font-size="22" font-weight="800" fill="#166534" text-anchor="middle">+1</text>
+  </svg>`,
+  multiply: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#a855f7">
+      <circle cx="16" cy="14" r="6" /><circle cx="36" cy="14" r="6" /><circle cx="56" cy="14" r="6" />
+      <circle cx="16" cy="34" r="6" /><circle cx="36" cy="34" r="6" /><circle cx="56" cy="34" r="6" />
+      <circle cx="16" cy="54" r="6" /><circle cx="36" cy="54" r="6" /><circle cx="56" cy="54" r="6" />
+    </g>
+    <text x="100" y="42" font-size="26" font-weight="800" fill="#7c3aed" text-anchor="middle">?</text>
+  </svg>`,
+  age: `<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="40" width="60" height="34" rx="6" fill="#fca5a5" />
+    <rect x="30" y="54" width="60" height="8" fill="#fff5" />
+    <rect x="46" y="24" width="10" height="20" fill="#fbbf24" />
+    <rect x="64" y="24" width="10" height="20" fill="#60a5fa" />
+    <path d="M46 24 q5 -12 0 -16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round" />
+    <path d="M69 24 q5 -12 0 -16" stroke="#f97316" stroke-width="3" fill="none" stroke-linecap="round" />
+  </svg>`
+};
+
 // ==================== Генериране на задачи ====================
 function generateProblems() {
   const r1 = [
@@ -985,6 +1091,7 @@ function generateLogicProblems() {
     const ans = terms[missingIndex];
     const display = terms.map((t, i) => (i === missingIndex ? '?' : t)).join(', ');
     problems.push({
+      subtype: 'sequence',
       id: 'r4_1',
       type: 'logic',
       text: `Намери липсващото число в редицата: ${display}`,
@@ -997,6 +1104,7 @@ function generateLogicProblems() {
     const added = rand(5, 40);
     const result = rand(50, 120);
     problems.push({
+      subtype: 'think',
       id: 'r4_2',
       type: 'logic',
       text: `Мисля си число. Като прибавя ${added}, получавам ${result}. Кое е числото, за което мисля?`,
@@ -1012,6 +1120,7 @@ function generateLogicProblems() {
     const n2 = pick(girlNames);
     const item = pick(items);
     problems.push({
+      subtype: 'compare',
       id: 'r4_3',
       type: 'logic',
       text: `${n1} има ${base} ${item}. Той има с ${diff} ${item} повече от ${n2}. Колко ${item} има ${n2}?`,
@@ -1024,6 +1133,7 @@ function generateLogicProblems() {
     const n = rand(10, 45);
     const sum = 2 * n + 1;
     problems.push({
+      subtype: 'consecutive',
       id: 'r4_4',
       type: 'logic',
       text: `Сборът от две последователни числа е ${sum}. Кое е по-малкото от тях?`,
@@ -1037,6 +1147,7 @@ function generateLogicProblems() {
     const other = rand(4, 12);
     const product = factor * other;
     problems.push({
+      subtype: 'multiply',
       id: 'r4_5',
       type: 'logic',
       text: `Кое число, умножено по ${factor}, дава ${product}?`,
@@ -1050,6 +1161,7 @@ function generateLogicProblems() {
     const ageThen = rand(6, 12);
     const name = pick([...boyNames, ...girlNames]);
     problems.push({
+      subtype: 'age',
       id: 'r4_6',
       type: 'logic',
       text: `Преди ${yearsAgo} години ${name} е бил${girlNames.includes(name) ? 'а' : ''} на ${ageThen} години. На колко години е ${girlNames.includes(name) ? 'тя' : 'той'} сега?`,
@@ -1064,6 +1176,7 @@ function generateLogicProblems() {
 let PROBLEMS = { r1: [], r2: [], r3: [], r4: [] };
 let activeTab = 'home';
 const userOps = {}; // id -> избран символ ('+','-','·',':')
+const jokerUsed = {}; // id -> true, ако е бил отворен жокер за задачата
 
 // ==================== Помощни за joker панели ====================
 function verticalJokerHTML(id, num1, num2, type) {
@@ -1179,6 +1292,27 @@ function jokerPanelHTML(p) {
   return `<div class="joker-wrap" style="display:none;">${hint}${inner}</div>`;
 }
 
+function logicJokerPanelHTML(p) {
+  const icon = LOGIC_ICONS[p.subtype] || LOGIC_ICONS.think;
+  let scratchFields = '';
+  for (let i = 0; i < 4; i++) {
+    scratchFields += `<input type="text" class="logic-scratch-input" />`;
+  }
+  const inner = `
+    <div class="joker-box yellow">
+      <div class="joker-title">Помощник</div>
+      <div class="logic-joker">
+        <div class="logic-joker-icon">${icon}</div>
+        <div class="logic-joker-helper">
+          <div class="logic-joker-label">Полета за смятане:</div>
+          <div class="logic-joker-fields">${scratchFields}</div>
+        </div>
+      </div>
+    </div>`;
+  const hint = `<div class="joker-hint joker-hint-warn">⚠️ Ползването на жокер намалява резултата ти за тази задача.</div>`;
+  return `<div class="joker-wrap" style="display:none;">${hint}${inner}</div>`;
+}
+
 // ==================== Рендиране на задача ====================
 function renderProblemCard(p, index) {
   const card = document.createElement('div');
@@ -1260,40 +1394,37 @@ function renderProblemCard(p, index) {
   feedbackSlot.className = 'feedback-slot';
   answerGroup.appendChild(feedbackSlot);
 
-  if (!isLogic) {
-    const jokerBtn = document.createElement('button');
-    jokerBtn.type = 'button';
-    jokerBtn.className = 'joker-btn';
-    jokerBtn.title = 'Покажи помощно поле за пресмятане';
-    jokerBtn.innerHTML = ICONS.lightbulb;
-    answerGroup.appendChild(jokerBtn);
+  const jokerBtn = document.createElement('button');
+  jokerBtn.type = 'button';
+  jokerBtn.className = 'joker-btn';
+  jokerBtn.title = 'Покажи помощно поле за пресмятане';
+  jokerBtn.innerHTML = ICONS.lightbulb;
+  answerGroup.appendChild(jokerBtn);
 
-    controls.appendChild(answerGroup);
-    row.appendChild(controls);
-    card.appendChild(row);
+  controls.appendChild(answerGroup);
+  row.appendChild(controls);
+  card.appendChild(row);
 
-    // --- Joker панел ---
-    const jokerHolder = document.createElement('div');
-    jokerHolder.innerHTML = jokerPanelHTML(p);
-    const jokerEl = jokerHolder.firstElementChild;
-    card.appendChild(jokerEl);
+  // --- Joker панел ---
+  const jokerHolder = document.createElement('div');
+  jokerHolder.innerHTML = isLogic ? logicJokerPanelHTML(p) : jokerPanelHTML(p);
+  const jokerEl = jokerHolder.firstElementChild;
+  card.appendChild(jokerEl);
 
-    jokerEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
-      digitEl.addEventListener('click', () => {
-        digitEl.classList.toggle('has-dot');
-      });
+  jokerEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
+    digitEl.addEventListener('click', () => {
+      digitEl.classList.toggle('has-dot');
     });
+  });
 
-    jokerBtn.addEventListener('click', () => {
-      const isOpen = jokerEl.style.display !== 'none';
-      jokerEl.style.display = isOpen ? 'none' : 'block';
-      jokerBtn.classList.toggle('active', !isOpen);
-    });
-  } else {
-    controls.appendChild(answerGroup);
-    row.appendChild(controls);
-    card.appendChild(row);
-  }
+  jokerBtn.addEventListener('click', () => {
+    const isOpen = jokerEl.style.display !== 'none';
+    jokerEl.style.display = isOpen ? 'none' : 'block';
+    jokerBtn.classList.toggle('active', !isOpen);
+    if (!isOpen) {
+      jokerUsed[p.id] = true;
+    }
+  });
 
   return card;
 }
@@ -1375,25 +1506,37 @@ function evaluateProblem(p) {
 
 function showStats(list) {
   let correct = 0, incorrect = 0, unanswered = 0;
+  let points = 0;
+  let assistedCount = 0;
 
   list.forEach(p => {
     const result = evaluateProblem(p);
     const card = document.querySelector(`.problem-card[data-id="${p.id}"]`);
+    const assisted = result === 'correct' && p.type === 'logic' && jokerUsed[p.id];
+
     if (card) {
-      card.classList.remove('card-correct', 'card-incorrect');
-      if (result === 'correct') card.classList.add('card-correct');
+      card.classList.remove('card-correct', 'card-incorrect', 'card-assisted');
+      if (assisted) card.classList.add('card-assisted');
+      else if (result === 'correct') card.classList.add('card-correct');
       else if (result === 'incorrect') card.classList.add('card-incorrect');
     }
-    if (result === 'correct') correct++;
-    else if (result === 'incorrect') incorrect++;
-    else unanswered++;
+
+    if (result === 'correct') {
+      correct++;
+      points += assisted ? 0.5 : 1;
+      if (assisted) assistedCount++;
+    } else if (result === 'incorrect') {
+      incorrect++;
+    } else {
+      unanswered++;
+    }
   });
 
   const total = list.length;
-  const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const percent = total > 0 ? Math.round((points / total) * 100) : 0;
 
   let emoji, message;
-  if (correct === total) {
+  if (points === total) {
     emoji = '🏆';
     message = 'Отлично! Всички отговори са верни!';
   } else if (percent >= 70) {
@@ -1407,15 +1550,21 @@ function showStats(list) {
     message = 'Не се отказвай! Използвай жокерите, за да си помогнеш.';
   }
 
+  const pointsLabel = Number.isInteger(points) ? points : points.toFixed(1);
+  const titleText = assistedCount > 0
+    ? `${pointsLabel} от ${total} точки`
+    : `${correct} от ${total} правилни отговора`;
+
   const overlay = document.createElement('div');
   overlay.className = 'stats-overlay';
   overlay.innerHTML = `
     <div class="stats-modal">
       <div class="stats-emoji">${emoji}</div>
-      <h2 class="stats-title">${correct} от ${total} правилни отговора</h2>
+      <h2 class="stats-title">${titleText}</h2>
       <div class="stats-bar-track"><div class="stats-bar-fill" id="statsBarFill" style="width:0%"></div></div>
       <p class="stats-percent">${percent}%</p>
       <p class="stats-message">${message}</p>
+      ${assistedCount > 0 ? `<p class="stats-sub">Използван жокер за ${assistedCount} ${assistedCount === 1 ? 'задача' : 'задачи'} — резултатът е намален наполовина за тях</p>` : ''}
       ${unanswered > 0 ? `<p class="stats-sub">Непопълнени отговори: ${unanswered}</p>` : ''}
       <div class="stats-actions">
         <button type="button" class="btn-stats-secondary" id="statsCloseBtn">Затвори</button>
@@ -1496,6 +1645,7 @@ function setActiveTab(tab) {
 function generateNew() {
   PROBLEMS = generateProblems();
   Object.keys(userOps).forEach(k => delete userOps[k]);
+  Object.keys(jokerUsed).forEach(k => delete jokerUsed[k]);
   setActiveTab(activeTab === 'home' ? 'home' : activeTab);
 }
 
