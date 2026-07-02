@@ -8,7 +8,7 @@
 <!-- Мета тагове за преглед на линка (Facebook, Messenger, WhatsApp, Slack, Twitter/X и др.) -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Интерактивна математика · 4. клас · Седмица 1" />
-<meta property="og:description" content="Интерактивни задачи по математика за 4. клас — събиране, изваждане, умножение, деление и текстови задачи, с жокери за помощ." />
+<meta property="og:description" content="Интерактивни задачи по математика за 4. клас — събиране, изваждане, умножение, деление, текстови и логически задачи, с жокери за помощ." />
 <meta property="og:image" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/social-preview.jpg" />
 <meta property="og:url" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -881,6 +881,7 @@ window.HERO_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoH
       <button type="button" class="tab-btn" data-tab="r1">1. Събиране и изваждане</button>
       <button type="button" class="tab-btn" data-tab="r2">2. Умножение и деление</button>
       <button type="button" class="tab-btn" data-tab="r3">3. Текстови задачи</button>
+      <button type="button" class="tab-btn" data-tab="r4">4. Логически задачи</button>
     </div>
 
     <!-- Съдържание -->
@@ -894,6 +895,15 @@ window.HERO_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoH
 <script>
 // ==================== Утилити ====================
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = (arr) => arr[rand(0, arr.length - 1)];
+const shuffle = (arr) => {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
 
 const getSymbol = (op) => {
   if (op === '*') return '·';
@@ -946,18 +956,112 @@ function generateProblems() {
   const w3_n1 = rand(8, 12), w3_n2 = rand(3, 6);
   const w4_n2 = rand(4, 8), w4_n1 = rand(4, 8) * w4_n2;
 
-  const r3 = [
+  const r3 = shuffle([
     { id: 'r3_1', type: 'word', text: `В библиотеката има ${w1_n1} книги. Донесли още ${w1_n2} книги. Колко книги има общо?`, op: '+', num1: w1_n1, num2: w1_n2, ans: w1_n1 + w1_n2 },
     { id: 'r3_2', type: 'word', text: `Мария има ${w2_n1} лв. Купува раница за ${w2_n2} лв. Колко лева ѝ остават?`, op: '-', num1: w2_n1, num2: w2_n2, ans: w2_n1 - w2_n2 },
     { id: 'r3_3', type: 'word', text: `В една кутия има ${w3_n1} флумастера. Колко флумастера има в ${w3_n2} такива кутии?`, op: '*', num1: w3_n1, num2: w3_n2, ans: w3_n1 * w3_n2 },
     { id: 'r3_4', type: 'word', text: `${w4_n1} бонбона се разпределят поравно между ${w4_n2} деца. По колко бонбона получава всяко дете?`, op: '/', num1: w4_n1, num2: w4_n2, ans: Math.floor(w4_n1 / w4_n2) }
-  ];
+  ]);
 
-  return { r1, r2, r3 };
+  const r4 = generateLogicProblems();
+
+  return { r1, r2, r3, r4 };
+}
+
+// ==================== Логически задачи ====================
+function generateLogicProblems() {
+  const boyNames = ['Иван', 'Петър', 'Георги', 'Стефан', 'Николай'];
+  const girlNames = ['Мария', 'Ани', 'Виктория', 'Елена', 'Радост'];
+  const items = ['топчета', 'стикери', 'моливи', 'копчета', 'мидички'];
+
+  const problems = [];
+
+  // 1. Числова редица — липсващо число
+  {
+    const start = rand(2, 20);
+    const step = rand(2, 9);
+    const missingIndex = rand(2, 3);
+    const terms = [start, start + step, start + 2 * step, start + 3 * step, start + 4 * step];
+    const ans = terms[missingIndex];
+    const display = terms.map((t, i) => (i === missingIndex ? '?' : t)).join(', ');
+    problems.push({
+      id: 'r4_1',
+      type: 'logic',
+      text: `Намери липсващото число в редицата: ${display}`,
+      ans
+    });
+  }
+
+  // 2. Мисля си число (обратна операция)
+  {
+    const added = rand(5, 40);
+    const result = rand(50, 120);
+    problems.push({
+      id: 'r4_2',
+      type: 'logic',
+      text: `Мисля си число. Като прибавя ${added}, получавам ${result}. Кое е числото, за което мисля?`,
+      ans: result - added
+    });
+  }
+
+  // 3. Логическо сравнение
+  {
+    const diff = rand(3, 15);
+    const base = rand(20, 60);
+    const n1 = pick(boyNames);
+    const n2 = pick(girlNames);
+    const item = pick(items);
+    problems.push({
+      id: 'r4_3',
+      type: 'logic',
+      text: `${n1} има ${base} ${item}. Той има с ${diff} ${item} повече от ${n2}. Колко ${item} има ${n2}?`,
+      ans: base - diff
+    });
+  }
+
+  // 4. Две последователни числа
+  {
+    const n = rand(10, 45);
+    const sum = 2 * n + 1;
+    problems.push({
+      id: 'r4_4',
+      type: 'logic',
+      text: `Сборът от две последователни числа е ${sum}. Кое е по-малкото от тях?`,
+      ans: n
+    });
+  }
+
+  // 5. Обратно умножение
+  {
+    const factor = rand(3, 9);
+    const other = rand(4, 12);
+    const product = factor * other;
+    problems.push({
+      id: 'r4_5',
+      type: 'logic',
+      text: `Кое число, умножено по ${factor}, дава ${product}?`,
+      ans: other
+    });
+  }
+
+  // 6. Възрастова задача
+  {
+    const yearsAgo = rand(2, 6);
+    const ageThen = rand(6, 12);
+    const name = pick([...boyNames, ...girlNames]);
+    problems.push({
+      id: 'r4_6',
+      type: 'logic',
+      text: `Преди ${yearsAgo} години ${name} е бил${girlNames.includes(name) ? 'а' : ''} на ${ageThen} години. На колко години е ${girlNames.includes(name) ? 'тя' : 'той'} сега?`,
+      ans: ageThen + yearsAgo
+    });
+  }
+
+  return shuffle(problems);
 }
 
 // ==================== Състояние ====================
-let PROBLEMS = { r1: [], r2: [], r3: [] };
+let PROBLEMS = { r1: [], r2: [], r3: [], r4: [] };
 let activeTab = 'home';
 const userOps = {}; // id -> избран символ ('+','-','·',':')
 
@@ -1082,9 +1186,11 @@ function renderProblemCard(p, index) {
   card.dataset.id = p.id;
 
   const isWord = p.type === 'word';
+  const isLogic = p.type === 'logic';
+  const isTextType = isWord || isLogic;
 
   const row = document.createElement('div');
-  row.className = 'problem-row' + (isWord ? '' : ' non-word');
+  row.className = 'problem-row' + (isTextType ? '' : ' non-word');
 
   // --- Основен текст/израз ---
   const main = document.createElement('div');
@@ -1096,7 +1202,7 @@ function renderProblemCard(p, index) {
   main.appendChild(indexBubble);
 
   const textWrap = document.createElement('div');
-  if (isWord) {
+  if (isTextType) {
     textWrap.className = 'problem-text';
     textWrap.textContent = p.text;
   } else {
@@ -1109,7 +1215,7 @@ function renderProblemCard(p, index) {
 
   // --- Контроли ---
   const controls = document.createElement('div');
-  controls.className = 'problem-controls' + (isWord ? ' word-controls' : '');
+  controls.className = 'problem-controls' + (isTextType ? ' word-controls' : '');
 
   if (isWord) {
     const opSelect = document.createElement('div');
@@ -1136,7 +1242,7 @@ function renderProblemCard(p, index) {
 
   const answerGroup = document.createElement('div');
   answerGroup.className = 'answer-group';
-  if (isWord) {
+  if (isTextType) {
     const lbl = document.createElement('span');
     lbl.className = 'answer-label';
     lbl.textContent = 'Отговор:';
@@ -1154,34 +1260,40 @@ function renderProblemCard(p, index) {
   feedbackSlot.className = 'feedback-slot';
   answerGroup.appendChild(feedbackSlot);
 
-  const jokerBtn = document.createElement('button');
-  jokerBtn.type = 'button';
-  jokerBtn.className = 'joker-btn';
-  jokerBtn.title = 'Покажи помощно поле за пресмятане';
-  jokerBtn.innerHTML = ICONS.lightbulb;
-  answerGroup.appendChild(jokerBtn);
+  if (!isLogic) {
+    const jokerBtn = document.createElement('button');
+    jokerBtn.type = 'button';
+    jokerBtn.className = 'joker-btn';
+    jokerBtn.title = 'Покажи помощно поле за пресмятане';
+    jokerBtn.innerHTML = ICONS.lightbulb;
+    answerGroup.appendChild(jokerBtn);
 
-  controls.appendChild(answerGroup);
-  row.appendChild(controls);
-  card.appendChild(row);
+    controls.appendChild(answerGroup);
+    row.appendChild(controls);
+    card.appendChild(row);
 
-  // --- Joker панел ---
-  const jokerHolder = document.createElement('div');
-  jokerHolder.innerHTML = jokerPanelHTML(p);
-  const jokerEl = jokerHolder.firstElementChild;
-  card.appendChild(jokerEl);
+    // --- Joker панел ---
+    const jokerHolder = document.createElement('div');
+    jokerHolder.innerHTML = jokerPanelHTML(p);
+    const jokerEl = jokerHolder.firstElementChild;
+    card.appendChild(jokerEl);
 
-  jokerEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
-    digitEl.addEventListener('click', () => {
-      digitEl.classList.toggle('has-dot');
+    jokerEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
+      digitEl.addEventListener('click', () => {
+        digitEl.classList.toggle('has-dot');
+      });
     });
-  });
 
-  jokerBtn.addEventListener('click', () => {
-    const isOpen = jokerEl.style.display !== 'none';
-    jokerEl.style.display = isOpen ? 'none' : 'block';
-    jokerBtn.classList.toggle('active', !isOpen);
-  });
+    jokerBtn.addEventListener('click', () => {
+      const isOpen = jokerEl.style.display !== 'none';
+      jokerEl.style.display = isOpen ? 'none' : 'block';
+      jokerBtn.classList.toggle('active', !isOpen);
+    });
+  } else {
+    controls.appendChild(answerGroup);
+    row.appendChild(controls);
+    card.appendChild(row);
+  }
 
   return card;
 }
