@@ -523,6 +523,25 @@ html, body {
   color: var(--blue-800);
   margin-bottom: 12px;
 }
+.scratch-note.note-wrong { color: var(--red-600); }
+
+.logic-op-choose {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.logic-op-btn.wrong {
+  background: #fee2e2;
+  color: var(--red-600);
+  border-color: var(--red-500);
+  animation: shake 0.4s ease-in-out;
+}
+.logic-calc-slot {
+  margin-top: 8px;
+}
+
 .scratch-grid {
   display: inline-flex;
   flex-direction: column;
@@ -1484,37 +1503,52 @@ function calcPanelHTML(p) {
   return `<div class="joker-wrap joker-wrap-scratch" style="display:none;">${hint}${inner}</div>`;
 }
 
-// Жокер за логическа задача — ПОКАЗВА действието нарисувано (намалява точки)
+// Жокер за логическа задача — показва подходящи ИЗОБРАЖЕНИЯ, които онагледяват
+// задачата (това е подсказката → намалява точки)
 function logicJokerPanelHTML(p) {
   const visual = logicJokerVisual(p);
   const inner = `
     <div class="joker-box yellow logic-joker-box">
-      <div class="logic-joker-section">
-        <div class="joker-title">🖼️ Жокер — виж задачата нарисувана</div>
-        <div class="logic-joker-visual">${visual}</div>
-      </div>
+      <div class="joker-title">💡 Жокер — виж задачата нарисувана</div>
+      <div class="logic-joker-visual">${visual}</div>
     </div>`;
   const hint = `<div class="joker-hint joker-hint-warn">⚠️ Ползването на жокер намалява резултата ти за тази задача.</div>`;
   return `<div class="joker-wrap joker-wrap-logic" style="display:none;">${hint}${inner}</div>`;
 }
 
-// Поле за смятане — празни колонки БЕЗ да подсказва действието (не намалява точки)
-function logicScratchPanelHTML(p) {
-  const digitsCount = 3;
-  const rows = 3;
-  let grid = '';
-  for (let r = 0; r < rows; r++) {
-    let cells = '';
-    for (let c = 0; c < digitsCount; c++) {
-      cells += `<input type="text" maxlength="1" class="scratch-cell" />`;
-    }
-    grid += `<div class="scratch-row">${cells}</div>`;
+// Калкулатор за логическа задача — попълнените числа в правилния формат
+// (показва се СЛЕД като детето избере вярното действие)
+function logicCalcHTML(p) {
+  const op = p.helperOp;
+  const n1 = p.helperN1;
+  const n2 = p.helperN2;
+  let inner = '';
+  if (op === '+' || op === '-') {
+    inner = verticalJokerHTML(p.id + '_c', n1, n2, op);
+  } else if (op === '*') {
+    inner = multiplicationJokerHTML(n1, n2);
+  } else if (op === '/') {
+    inner = divisionJokerHTML(n1, n2);
   }
+  const pre = p.helperPre ? `<div class="logic-helper-pre">${p.helperPre}</div>` : '';
+  return `${pre}<div class="logic-joker-helper-calc">${inner}</div>`;
+}
+
+// Поле за смятане за логическа задача — иска първо да се избере действието,
+// после показва числата в правилния формат (не намалява точки, ако действието е познато веднага)
+function logicScratchPanelHTML(p) {
+  const opButtons = ['+', '-', '·', ':'].map(sym =>
+    `<button type="button" class="op-btn logic-op-btn" data-sym="${sym}">${sym}</button>`
+  ).join('');
   const inner = `
     <div class="joker-box blue logic-scratch-box">
       <div class="joker-title">🧮 Поле за смятане</div>
-      <div class="scratch-note">Тук можеш да смяташ на спокойствие — това не намалява точките ти.</div>
-      <div class="scratch-grid">${grid}</div>
+      <div class="scratch-note">Първо избери кое действие ще извършиш, за да се появи полето за смятане.</div>
+      <div class="logic-op-choose">
+        <span class="op-label">Действие:</span>
+        <div class="op-buttons">${opButtons}</div>
+      </div>
+      <div class="logic-calc-slot" style="display:none;"></div>
     </div>`;
   return `<div class="joker-wrap joker-wrap-scratch" style="display:none;">${inner}</div>`;
 }
@@ -1646,17 +1680,57 @@ function renderProblemCard(p, index) {
   const scratchEl = scratchHolder.firstElementChild;
   card.appendChild(scratchEl);
 
-  scratchEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
-    digitEl.addEventListener('click', () => {
-      digitEl.classList.toggle('has-dot');
+  if (isLogic) {
+    // Калкулаторът иска първо избор на действие
+    const correctSym = getSymbol(p.helperOp);
+    const calcSlot = scratchEl.querySelector('.logic-calc-slot');
+    const noteEl = scratchEl.querySelector('.scratch-note');
+    const opBtns = scratchEl.querySelectorAll('.logic-op-btn');
+    let calcRevealed = false;
+
+    opBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sym = btn.dataset.sym;
+        opBtns.forEach(b => b.classList.remove('active', 'wrong'));
+        btn.classList.add('active');
+
+        if (sym === correctSym) {
+          // Правилно действие — показваме полето за смятане
+          if (!calcRevealed) {
+            calcSlot.innerHTML = logicCalcHTML(p);
+            calcSlot.style.display = 'block';
+            calcRevealed = true;
+            // закачаме borrow точките за новопоявилите се цифри
+            calcSlot.querySelectorAll('.borrow-toggle').forEach(digitEl => {
+              digitEl.addEventListener('click', () => digitEl.classList.toggle('has-dot'));
+            });
+          }
+          noteEl.textContent = 'Браво! Ето полето за смятане:';
+          noteEl.classList.remove('note-wrong');
+        } else {
+          // Грешно действие — отнемаме точки (както жокер)
+          btn.classList.add('wrong');
+          calcSlot.style.display = 'none';
+          calcRevealed = false;
+          jokerUsed[p.id] = true;
+          noteEl.textContent = 'Това не е вярното действие. Опитай пак — но точките за тази задача вече са намалени.';
+          noteEl.classList.add('note-wrong');
+        }
+      });
     });
-  });
+  } else {
+    scratchEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
+      digitEl.addEventListener('click', () => {
+        digitEl.classList.toggle('has-dot');
+      });
+    });
+  }
 
   scratchBtn.addEventListener('click', () => {
     const isOpen = scratchEl.style.display !== 'none';
     scratchEl.style.display = isOpen ? 'none' : 'block';
     scratchBtn.classList.toggle('active', !isOpen);
-    // НЕ маркираме jokerUsed — това не намалява точки
+    // Само отварянето на калкулатора НЕ намалява точки
   });
 
   return card;
