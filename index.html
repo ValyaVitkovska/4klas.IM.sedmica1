@@ -6,12 +6,12 @@
 <title>Интерактивна математика · 4. клас</title>
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Интерактивна математика · 4. клас · Седмица 1" />
-<meta property="og:description" content="Интерактивни задачи по математика за 4. клас — събиране, изваждане, умножение, деление, текстови и логически задачи, с жокери за помощ." />
+<meta property="og:description" content="Интерактивни задачи по математика за 4. клас — събиране, изваждане, умножение, деление, текстови и логически задачи." />
 <meta property="og:image" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/social-preview.jpg" />
 <meta property="og:url" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Интерактивна математика · 4. клас · Седмица 1" />
-<meta name="twitter:description" content="Интерактивни задачи по математика за 4. клас с жокери за помощ." />
+<meta name="twitter:description" content="Интерактивни задачи по математика за 4. клас." />
 <meta name="twitter:image" content="https://valyavitkovska.github.io/4klas.IM.sedmica1/social-preview.jpg" />
 <style>
 :root {
@@ -491,6 +491,61 @@ html, body {
   color: var(--yellow-600);
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
 }
+
+/* Бутон "поле за смятане" — син, за да се различава от жокера */
+.scratch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid var(--slate-200);
+  background: #fff;
+  color: var(--slate-400);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+@media (min-width: 640px) { .scratch-btn { width: 56px; height: 56px; } }
+.scratch-btn:hover { border-color: var(--blue-300); color: var(--blue-600); background: var(--blue-50); }
+.scratch-btn.active {
+  background: var(--blue-100);
+  border-color: var(--blue-400, #60a5fa);
+  color: var(--blue-700);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+/* Поле за смятане */
+.logic-scratch-box { display: block; width: 100%; }
+.scratch-note {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-800);
+  margin-bottom: 12px;
+}
+.scratch-grid {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.scratch-row {
+  display: flex;
+  gap: 8px;
+}
+.scratch-cell {
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  border: 2px solid var(--slate-300);
+  border-radius: 8px;
+  outline: none;
+  font-family: 'Courier New', monospace;
+  color: var(--slate-800);
+  background: #fff;
+}
+.scratch-cell:focus { border-color: var(--blue-500); }
 
 /* Joker panel */
 .joker-wrap {
@@ -1033,7 +1088,8 @@ const getSymbol = (op) => {
 const ICONS = {
   lightbulb: '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
   check: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>',
-  refresh: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>'
+  refresh: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>',
+  calc: '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="18" x2="12" y2="18"/></svg>'
 };
 
 // SVG илюстрации за жокера в рубрика "Логически задачи"
@@ -1346,7 +1402,7 @@ function verticalJokerHTML(id, num1, num2, type) {
 
   return `
     <div class="joker-box yellow">
-      <div class="joker-title">Помощно поле (Жокер)</div>
+      <div class="joker-title">Поле за смятане</div>
       <div class="vjoker">
         <div class="vjoker-row">${topInputs}</div>
         <div class="vjoker-row">${digits1}</div>
@@ -1360,7 +1416,7 @@ function verticalJokerHTML(id, num1, num2, type) {
 function multiplicationJokerHTML(num1, num2) {
   return `
     <div class="joker-box yellow">
-      <div class="joker-title">Помощно поле (Умножение)</div>
+      <div class="joker-title">Поле за смятане (умножение)</div>
       <div class="mjoker">
         <div class="mjoker-carry">Наум: <input type="text" /></div>
         <div class="mjoker-row">
@@ -1412,7 +1468,7 @@ function divisionJokerHTML(num1, num2) {
     </div>`;
 }
 
-function jokerPanelHTML(p) {
+function calcPanelHTML(p) {
   const effectiveType = p.type === 'word' ? p.op : (p.type === 'mixed' ? p.typeStr : p.type);
   let inner = '';
   if (effectiveType === '+' || effectiveType === '-') {
@@ -1423,42 +1479,44 @@ function jokerPanelHTML(p) {
     inner = divisionJokerHTML(p.num1, p.num2);
   }
   const hint = p.type === 'word'
-    ? `<div class="joker-hint">💡 Използвай числата от задачата, за да пресметнеш по-лесно тук:</div>`
+    ? `<div class="joker-hint">🧮 Използвай числата от задачата, за да пресметнеш по-лесно тук:</div>`
     : '';
-  return `<div class="joker-wrap" style="display:none;">${hint}${inner}</div>`;
+  return `<div class="joker-wrap joker-wrap-scratch" style="display:none;">${hint}${inner}</div>`;
 }
 
+// Жокер за логическа задача — ПОКАЗВА действието нарисувано (намалява точки)
 function logicJokerPanelHTML(p) {
   const visual = logicJokerVisual(p);
-
-  // Помощникът ползва същите жокери като другите рубрики
-  let helperInner = '';
-  const op = p.helperOp;
-  const n1 = p.helperN1;
-  const n2 = p.helperN2;
-  if (op === '+' || op === '-') {
-    helperInner = verticalJokerHTML(p.id, n1, n2, op);
-  } else if (op === '*') {
-    helperInner = multiplicationJokerHTML(n1, n2);
-  } else if (op === '/') {
-    helperInner = divisionJokerHTML(n1, n2);
-  }
-  const helperPre = p.helperPre ? `<div class="logic-helper-pre">${p.helperPre}</div>` : '';
-
   const inner = `
     <div class="joker-box yellow logic-joker-box">
       <div class="logic-joker-section">
         <div class="joker-title">🖼️ Жокер — виж задачата нарисувана</div>
         <div class="logic-joker-visual">${visual}</div>
       </div>
-      <div class="logic-joker-section">
-        <div class="joker-title">🧮 Помощник — извърши действието</div>
-        ${helperPre}
-        <div class="logic-joker-helper-calc">${helperInner}</div>
-      </div>
     </div>`;
   const hint = `<div class="joker-hint joker-hint-warn">⚠️ Ползването на жокер намалява резултата ти за тази задача.</div>`;
-  return `<div class="joker-wrap" style="display:none;">${hint}${inner}</div>`;
+  return `<div class="joker-wrap joker-wrap-logic" style="display:none;">${hint}${inner}</div>`;
+}
+
+// Поле за смятане — празни колонки БЕЗ да подсказва действието (не намалява точки)
+function logicScratchPanelHTML(p) {
+  const digitsCount = 3;
+  const rows = 3;
+  let grid = '';
+  for (let r = 0; r < rows; r++) {
+    let cells = '';
+    for (let c = 0; c < digitsCount; c++) {
+      cells += `<input type="text" maxlength="1" class="scratch-cell" />`;
+    }
+    grid += `<div class="scratch-row">${cells}</div>`;
+  }
+  const inner = `
+    <div class="joker-box blue logic-scratch-box">
+      <div class="joker-title">🧮 Поле за смятане</div>
+      <div class="scratch-note">Тук можеш да смяташ на спокойствие — това не намалява точките ти.</div>
+      <div class="scratch-grid">${grid}</div>
+    </div>`;
+  return `<div class="joker-wrap joker-wrap-scratch" style="display:none;">${inner}</div>`;
 }
 
 // ==================== Рендиране на задача ====================
@@ -1542,36 +1600,63 @@ function renderProblemCard(p, index) {
   feedbackSlot.className = 'feedback-slot';
   answerGroup.appendChild(feedbackSlot);
 
-  const jokerBtn = document.createElement('button');
-  jokerBtn.type = 'button';
-  jokerBtn.className = 'joker-btn';
-  jokerBtn.title = 'Покажи помощно поле за пресмятане';
-  jokerBtn.innerHTML = ICONS.lightbulb;
-  answerGroup.appendChild(jokerBtn);
+  // Жълтата крушка (жокер с рисунка) е само за логическите задачи — намалява точки
+  let jokerBtn = null;
+  if (isLogic) {
+    jokerBtn = document.createElement('button');
+    jokerBtn.type = 'button';
+    jokerBtn.className = 'joker-btn';
+    jokerBtn.title = 'Покажи жокер (намалява точките)';
+    jokerBtn.innerHTML = ICONS.lightbulb;
+    answerGroup.appendChild(jokerBtn);
+  }
+
+  // Синият калкулатор (поле за смятане) е навсякъде — не намалява точки
+  const scratchBtn = document.createElement('button');
+  scratchBtn.type = 'button';
+  scratchBtn.className = 'scratch-btn';
+  scratchBtn.title = 'Поле за смятане';
+  scratchBtn.innerHTML = ICONS.calc;
+  answerGroup.appendChild(scratchBtn);
 
   controls.appendChild(answerGroup);
   row.appendChild(controls);
   card.appendChild(row);
 
-  // --- Joker панел ---
-  const jokerHolder = document.createElement('div');
-  jokerHolder.innerHTML = isLogic ? logicJokerPanelHTML(p) : jokerPanelHTML(p);
-  const jokerEl = jokerHolder.firstElementChild;
-  card.appendChild(jokerEl);
+  // --- Жокер панел (само логически: рисунка, намалява точки) ---
+  if (isLogic && jokerBtn) {
+    const jokerHolder = document.createElement('div');
+    jokerHolder.innerHTML = logicJokerPanelHTML(p);
+    const jokerEl = jokerHolder.firstElementChild;
+    card.appendChild(jokerEl);
 
-  jokerEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
+    jokerBtn.addEventListener('click', () => {
+      const isOpen = jokerEl.style.display !== 'none';
+      jokerEl.style.display = isOpen ? 'none' : 'block';
+      jokerBtn.classList.toggle('active', !isOpen);
+      if (!isOpen) {
+        jokerUsed[p.id] = true;
+      }
+    });
+  }
+
+  // --- Поле за смятане (навсякъде, не намалява точки) ---
+  const scratchHolder = document.createElement('div');
+  scratchHolder.innerHTML = isLogic ? logicScratchPanelHTML(p) : calcPanelHTML(p);
+  const scratchEl = scratchHolder.firstElementChild;
+  card.appendChild(scratchEl);
+
+  scratchEl.querySelectorAll('.borrow-toggle').forEach(digitEl => {
     digitEl.addEventListener('click', () => {
       digitEl.classList.toggle('has-dot');
     });
   });
 
-  jokerBtn.addEventListener('click', () => {
-    const isOpen = jokerEl.style.display !== 'none';
-    jokerEl.style.display = isOpen ? 'none' : 'block';
-    jokerBtn.classList.toggle('active', !isOpen);
-    if (!isOpen) {
-      jokerUsed[p.id] = true;
-    }
+  scratchBtn.addEventListener('click', () => {
+    const isOpen = scratchEl.style.display !== 'none';
+    scratchEl.style.display = isOpen ? 'none' : 'block';
+    scratchBtn.classList.toggle('active', !isOpen);
+    // НЕ маркираме jokerUsed — това не намалява точки
   });
 
   return card;
@@ -1740,7 +1825,7 @@ function showStats(list) {
   });
 }
 
-const WELCOME_TEXT = 'Здравей! Избери рубрика от менюто горе или натисни бутона по-долу, за да започнеш решаването на задачите. Ако се затрудниш, не забравяй да използваш жокерите с крушката 💡!';
+const WELCOME_TEXT = 'Здравей! Избери рубрика от менюто горе или натисни бутона по-долу, за да започнеш решаването на задачите. Ако искаш да си улесниш пресмятането, ползвай полето за смятане с калкулатора 🧮 — то не намалява точките ти. А при логическите задачи имаш и жокер с крушката 💡, който показва задачата нарисувана, но намалява малко точките.';
 
 function animateLetters(el, text) {
   el.innerHTML = '';
